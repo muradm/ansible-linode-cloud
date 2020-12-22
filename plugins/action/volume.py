@@ -106,6 +106,6 @@ def _fake_volume(configured):
             'region': configured['region'],
             'size': configured['size'],
             'label': configured['label'],
-            'tags': [] if not configured['tags'] else configured['tags'],
+            'tags': [] if 'tags' not in configured else configured['tags'],
         }
     }

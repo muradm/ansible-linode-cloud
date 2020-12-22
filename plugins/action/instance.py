@@ -119,7 +119,7 @@ def _fake_instance(configured):
             'id': -1,
             'ipv4': ["0.0.0.0"],
             'ipv6': '0000:0000::0000:0000:0000:0000/64',
-            'root_pass': '1234' if not configured['root_pass'] else configured['root_pass'],
+            'root_pass': '1234' if 'root_pass' not in configured else configured['root_pass'],
             'specs': {},
             'status': 'booting',
             'updated': datetime.now().isoformat(),
@@ -128,8 +128,8 @@ def _fake_instance(configured):
             'ltype': configured['type'],
             'image': configured['image'],
             'label': configured['label'],
-            'group': '' if not configured['group'] else configured['group'],
-            'tags': [] if not configured['tags'] else configured['tags'],
+            'group': '' if 'group' not in configured else configured['group'],
+            'tags': [] if 'tags' not in configured else configured['tags'],
             'authorized_keys': configured['authorized_keys'],
         }
     }
