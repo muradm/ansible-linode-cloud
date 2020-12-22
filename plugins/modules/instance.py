@@ -58,6 +58,11 @@ options:
     elements: str
     default: []
     required: false
+  ipv4_public_rdns:
+    description: Reverse DNS address for public IPv4 address.
+    type: str
+    default: None
+    required: false
   root_pass:
     description: Root password to set at instance creation time.
     type: str

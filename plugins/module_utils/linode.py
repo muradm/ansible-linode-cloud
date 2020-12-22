@@ -3,9 +3,12 @@ from ansible.errors import AnsibleError
 from ansible.module_utils._text import to_native
 from ansible.module_utils.ansible_release import __version__ as ansible_version
 from ansible.plugins.action import ActionBase
+from ansible.utils.display import Display
 from copy import deepcopy
 from os import environ
 
+
+log = Display()
 
 class LinodeClientModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
@@ -86,6 +89,9 @@ class LinodeClientModule(ActionBase):
             else:
                 result['instance'] = deepcopy(instance._raw_json)
 
+            if 'ipv4_public_rdns' in args:
+                response.ips.ipv4.public.rdns = args['ipv4_public_rdns']
+
         except Exception as e:
             self.raise_client_error(e)
 
@@ -96,6 +102,27 @@ class LinodeClientModule(ActionBase):
 
         try:
             return self._client.load(Instance, id)
+        except Exception as e:
+            self.raise_client_error(e)
+
+    def instance_ipv4_public_rdns(self, id):
+        from linode_api4 import Instance
+
+        try:
+            rdns = self._client.load(Instance, id).ips.ipv4.public[0].rdns
+            log.vvv('instance_ipv4_public_rdns %s' % rdns)
+            return self._client.load(Instance, id).ips.ipv4.public[0].rdns
+        except Exception as e:
+            self.raise_client_error(e)
+
+    def instance_set_ipv4_public_rdns(self, id, ipv4_public_rdns):
+        from linode_api4 import Instance, IPAddress
+
+        try:
+            instance = self._client.load(Instance, id)
+            instance.ips.ipv4.public[0].rdns = ipv4_public_rdns
+            instance.ips.ipv4.public[0].save()
+            return True
         except Exception as e:
             self.raise_client_error(e)
 
@@ -123,7 +150,7 @@ class LinodeClientModule(ActionBase):
                 **remaining
             )
 
-            result = { 'volume': deepcopy(response._raw_json) }
+            result = {'volume': deepcopy(response._raw_json)}
 
         except Exception as e:
             self.raise_client_error(e)
@@ -154,10 +181,12 @@ class LinodeClientModule(ActionBase):
         except Exception as e:
             self.raise_client_error(e)
 
+
 def _label(otype, task_args={}):
     if 'label' not in task_args:
         raise AnsibleError(u'%s label not set' % otype)
     return task_args['label']
+
 
 def _is_present(otype, task_args={}):
     state = task_args.get('state')
@@ -171,15 +200,19 @@ def _is_present(otype, task_args={}):
     else:
         raise AnsibleError(u'unexpected %s state' % otype)
 
+
 def _validate_label_match_or_empty(otype, label, obj):
     if obj is None:
         return
 
     if 'label' not in obj or obj['label'] != label:
-        raise AnsibleError(u'argument label %s is not %s label' % (label, otype))
+        raise AnsibleError(
+            u'argument label %s is not %s label' % (label, otype))
+
 
 def _original(key, task_vars={}):
     return task_vars.get(key, None)
+
 
 def _is_same_value(a, b):
     return (not a and not b) or (a == b)
