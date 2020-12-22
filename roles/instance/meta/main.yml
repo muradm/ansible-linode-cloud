@@ -1,0 +1,13 @@
+galaxy_info:
+  author: muradm
+  description: Reflects inventory host to linode cloud and vice versa
+
+  issue_tracker_url: http://github.com/muradm/ansible-linode-cloud/issues
+
+  license: Apache-2.0
+
+  min_ansible_version: 2.10
+
+  galaxy_tags:
+    cloud
+    linode

@@ -1,0 +1,27 @@
+namespace: linode
+name: cloud
+version: 1.0.0
+readme: README.md
+authors:
+    - muradm <mail@muradm.net> (@muradm)
+
+description: Ansible collection with tools to manage Linode Cloud.
+
+license:
+    - Apache-2.0
+
+tags:
+    - cloud
+    - linode
+
+repository: http://github.com/muradm/ansible-linode-cloud
+
+documentation: http://github.com/muradm/ansible-linode-cloud
+
+homepage: http://github.com/muradm/ansible-linode-cloud
+
+issues: http://github.com/muradm/ansible-linode-cloud/issues
+
+build_ignore:
+    - '.vscode'
+    - '.venv'
