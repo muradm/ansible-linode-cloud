@@ -34,7 +34,7 @@
     module: known_hosts
     name: '{{ ansible_host }}'
     # TODO: currently receiving only rsa key
-    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa {{ ansible_host }} &>/dev/null') }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa {{ ansible_host }} 2>/dev/null') }}"
     # TODO: check for hashing, hash value is different for same host in multiple runs
     # TODO: causing written many times
     hash_host: false
