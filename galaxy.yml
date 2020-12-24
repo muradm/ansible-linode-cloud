@@ -1,6 +1,6 @@
 namespace: muradm
 name: linode
-version: 0.2.5
+version: 0.2.6
 readme: README.md
 authors:
     - muradm <mail@muradm.net> (@muradm)
