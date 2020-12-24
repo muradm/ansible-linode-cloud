@@ -7,7 +7,6 @@ from copy import deepcopy
 from os import environ
 
 
-
 class LinodeClientModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
         if task_vars is None:
