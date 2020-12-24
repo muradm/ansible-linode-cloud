@@ -12,6 +12,12 @@ avoid this one could use 'gather_facts: no' while applying this role. Otherwise,
 accessible IP address for 'ansible_host' should be provided manually in the local inventory,
 thus duplicated.
 
+Requirements
+--------------
+
+- `linode_api4`
+- `netaddr`
+
 Role Variables
 --------------
 
