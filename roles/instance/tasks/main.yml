@@ -1,39 +1,41 @@
 ---
 - block:
-    - name: 'create'
+    - name: create
       instance:
-        label: '{{ linode_label | default(inventory_hostname) | mandatory }}'
-        region: '{{ linode_region | mandatory }}'
-        type: '{{ linode_type | mandatory }}'
-        image: '{{ linode_image | mandatory }}'
-        tags: '{{ linode_tags | default(group_names) }}'
-        authorized_keys: '{{ linode_authorized_keys | default([]) }}'
-        ipv4_public_rdns: '{{ linode_ipv4_public_rdns | default(omit) }}'
-        ipv4_private_ip: '{{ linode_ipv4_private_ip | default(false) }}'
+        label: "{{ linode_label | default(inventory_hostname) | mandatory }}"
+        region: "{{ linode_region | mandatory }}"
+        type: "{{ linode_type | mandatory }}"
+        image: "{{ linode_image | mandatory }}"
+        tags: "{{ linode_tags | default(group_names) }}"
+        authorized_keys: "{{ linode_authorized_keys | default([]) }}"
+        ipv4_public_rdns: "{{ linode_ipv4_public_rdns | default(omit) }}"
+        ipv4_private_ip: "{{ linode_ipv4_private_ip | default(false) }}"
         state: present
       register: result
 
     - name: record
       set_fact:
-        ansible_host: '{{ result.instance.ipv4[0] }}'
+        cacheable: yes
+        ansible_host: "{{ result.instance.ipv4 | ansible.netcommon.ipaddr('public') | first }}"
         ansible_user: root
-        ansible_linode_instance: '{{ result.instance }}'
+        ansible_linode_instance: "{{ result.instance }}"
+        ansible_private_ipv4_address: "{{ result.instance.ipv4 | ansible.netcommon.ipaddr('private') | first | default(omit) }}"
 
-- name: 'wait for instance'
+- name: "wait for instance"
   local_action:
     module: wait_for
-    host: '{{ ansible_host }}'
+    host: "{{ ansible_host }}"
     port: 22
     timeout: 600
-  when: linode_wait_for_running | default(True) 
+  when: linode_wait_for_running | default(True)
 
-- name: 'update authenticity'
+- name: "update authenticity"
   local_action:
     # TODO: there seems to be general problem with known_hosts
     # TODO: when run on inventory in parallel file gets overwritten
     # TODO: loosing the some other hosts keys
     module: known_hosts
-    name: '{{ ansible_host }}'
+    name: "{{ ansible_host }}"
     # TODO: currently receiving only rsa key
     key: "{{ lookup('pipe', 'ssh-keyscan -t rsa {{ ansible_host }} 2>/dev/null') }}"
     # TODO: check for hashing, hash value is different for same host in multiple runs
