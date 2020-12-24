@@ -57,7 +57,7 @@ EXAMPLES = r'''
 - name: create my linode volume
   hosts: localhost
   tasks:
-  - linode.cloud.volume:
+  - muradm.linode.volume:
       label: 'my-volume-1'
       region: 'eu-central'
       size: 10
@@ -68,7 +68,7 @@ EXAMPLES = r'''
 - name: resize my volume and update tags
   hosts: localhost
   tasks:
-  - linode.cloud.volume:
+  - muradm.linode.volume:
       label: 'my-volume-1'
       region: 'eu-central'
       size: 20
@@ -80,7 +80,7 @@ EXAMPLES = r'''
 - name: remove my volume
   hosts: localhost
   tasks:
-  - linode.cloud.volume:
+  - muradm.linode.volume:
       label: 'my-volume-1'
       state: 'absent'
 '''

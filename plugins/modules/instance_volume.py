@@ -36,7 +36,7 @@ EXAMPLES = r'''
 - name: create my linode instance
   hosts: localhost
   tasks:
-  - linode.cloud.instance:
+  - muradm.linode.instance:
       label: 'my-linode-1'
       type: 'g6-standard-1'
       image: 'linode/debian10'
@@ -48,7 +48,7 @@ EXAMPLES = r'''
 - name: create my linode volume
   hosts: localhost
   tasks:
-  - linode.cloud.volume:
+  - muradm.linode.volume:
       label: 'my-volume-1'
       region: 'eu-central'
       size: 10
@@ -59,14 +59,14 @@ EXAMPLES = r'''
 - name: attach volume to instance
   hosts: localhost
   tasks:
-  - linode.cloud.instance_volume:
+  - muradm.linode.instance_volume:
       instance: 'my-linode-1'
       volume: 'my-volume-1'
 
 - name: detach volume from instance
   hosts: localhost
   tasks:
-  - linode.cloud.instance_volume:
+  - muradm.linode.instance_volume:
       instance: 'my-linode-1'
       volume: 'my-volume-1'
       state: 'absent'

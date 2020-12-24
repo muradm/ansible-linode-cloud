@@ -90,7 +90,7 @@ EXAMPLES = r'''
 - name: create my linode instance
   hosts: localhost
   tasks:
-  - linode.cloud.instance:
+  - muradm.linode.instance:
       label: 'my-linode-1'
       type: 'g6-standard-1'
       image: 'linode/debian10'
@@ -102,7 +102,7 @@ EXAMPLES = r'''
 - name: update my linode tags
   hosts: localhost
   tasks:
-  - linode.cloud.instance:
+  - muradm.linode.instance:
       label: 'my-linode-1'
       type: 'g6-standard-1'
       image: 'linode/debian10'
@@ -115,7 +115,7 @@ EXAMPLES = r'''
 - name: remove my linode
   hosts: localhost
   tasks:
-  - linode.cloud.instance:
+  - muradm.linode.instance:
       label: 'my-linode-1'
       state: 'absent'
 '''

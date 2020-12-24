@@ -1,6 +1,6 @@
-namespace: linode
-name: cloud
-version: 0.2.2
+namespace: muradm
+name: linode
+version: 0.2.3
 readme: README.md
 authors:
     - muradm <mail@muradm.net> (@muradm)
