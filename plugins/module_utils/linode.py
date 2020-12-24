@@ -3,12 +3,10 @@ from ansible.errors import AnsibleError
 from ansible.module_utils._text import to_native
 from ansible.module_utils.ansible_release import __version__ as ansible_version
 from ansible.plugins.action import ActionBase
-from ansible.utils.display import Display
 from copy import deepcopy
 from os import environ
 
 
-log = Display()
 
 class LinodeClientModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
@@ -113,13 +111,12 @@ class LinodeClientModule(ActionBase):
         from linode_api4 import Instance
 
         try:
-            rdns = self._client.load(Instance, id).ips.ipv4.public[0].rdns
             return self._client.load(Instance, id).ips.ipv4.public[0].rdns
         except Exception as e:
             self.raise_client_error(e)
 
     def instance_set_ipv4_public_rdns(self, id, ipv4_public_rdns):
-        from linode_api4 import Instance, IPAddress
+        from linode_api4 import Instance
 
         try:
             instance = self._client.load(Instance, id)
@@ -133,8 +130,6 @@ class LinodeClientModule(ActionBase):
         from linode_api4 import Instance
 
         try:
-            private_ip = self._client.load(Instance, id).ips.ipv4.private[0]
-            log.vvv('instance_ipv4_private_ip exists %s' % private_ip)
             return self._client.load(Instance, id).ips.ipv4.private[0]
         except IndexError:
             return None
@@ -142,12 +137,8 @@ class LinodeClientModule(ActionBase):
             self.raise_client_error(e)
 
     def instance_allocate_ipv4_private_ip(self, id):
-        from linode_api4 import Instance, IPAddress
-
         try:
-            private_ip = self._client.networking.ip_allocate(id, public=False)
-            log.vvv('instance_ipv4_private_ip allocated %s' % private_ip)
-            return private_ip
+            return self._client.networking.ip_allocate(id, public=False)
         except Exception as e:
             self.raise_client_error(e)
 

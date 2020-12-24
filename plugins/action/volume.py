@@ -97,7 +97,7 @@ def _fake_volume(configured):
     return {
         'volume': {
             'created': datetime.now().isoformat(),
-            'filesystem_path': '/dev/disk/by-id/%s' % module.params['label'],
+            'filesystem_path': '/dev/disk/by-id/%s' % configured['label'],
             'id': -1,
             'linode_id': None,
             'linode_label': None,

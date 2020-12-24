@@ -166,7 +166,7 @@ instance:
       ],
       "type": "g6-standard-4",
       "updated": "2020-12-21T18:54:21",
-      "watchdog_enabled": true 
+      "watchdog_enabled": true
   }
 root_pass:
   description: The root password to linode instance.

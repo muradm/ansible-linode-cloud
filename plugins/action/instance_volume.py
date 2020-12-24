@@ -7,9 +7,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from ansible.errors import AnsibleError
-from copy import deepcopy
-from datetime import datetime
-from ..module_utils.linode import LinodeClientModule, _label, _is_present, _is_same_value
+from ..module_utils.linode import LinodeClientModule, _is_present
 
 
 class ActionModule(LinodeClientModule):
