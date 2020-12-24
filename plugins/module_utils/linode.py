@@ -87,10 +87,14 @@ class LinodeClientModule(ActionBase):
                 result['instance'] = deepcopy(instance._raw_json)
                 result['root_pass'] = root_pass
             else:
+                instance = response
                 result['instance'] = deepcopy(instance._raw_json)
 
             if 'ipv4_public_rdns' in args:
-                response.ips.ipv4.public.rdns = args['ipv4_public_rdns']
+                instance.ips.ipv4.public.rdns = args['ipv4_public_rdns']
+
+            if 'ipv4_private_ip' in args:
+                self.instance_allocate_ipv4_private_ip(instance, public=False)
 
         except Exception as e:
             self.raise_client_error(e)
@@ -110,7 +114,6 @@ class LinodeClientModule(ActionBase):
 
         try:
             rdns = self._client.load(Instance, id).ips.ipv4.public[0].rdns
-            log.vvv('instance_ipv4_public_rdns %s' % rdns)
             return self._client.load(Instance, id).ips.ipv4.public[0].rdns
         except Exception as e:
             self.raise_client_error(e)
@@ -123,6 +126,28 @@ class LinodeClientModule(ActionBase):
             instance.ips.ipv4.public[0].rdns = ipv4_public_rdns
             instance.ips.ipv4.public[0].save()
             return True
+        except Exception as e:
+            self.raise_client_error(e)
+
+    def instance_ipv4_private_ip(self, id):
+        from linode_api4 import Instance
+
+        try:
+            private_ip = self._client.load(Instance, id).ips.ipv4.private[0]
+            log.vvv('instance_ipv4_private_ip exists %s' % private_ip)
+            return self._client.load(Instance, id).ips.ipv4.private[0]
+        except IndexError:
+            return None
+        except Exception as e:
+            self.raise_client_error(e)
+
+    def instance_allocate_ipv4_private_ip(self, id):
+        from linode_api4 import Instance, IPAddress
+
+        try:
+            private_ip = self._client.networking.ip_allocate(id, public=False)
+            log.vvv('instance_ipv4_private_ip allocated %s' % private_ip)
+            return private_ip
         except Exception as e:
             self.raise_client_error(e)
 

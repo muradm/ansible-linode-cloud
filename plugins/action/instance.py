@@ -43,6 +43,7 @@ class ActionModule(LinodeClientModule):
             source = deepcopy(original_instance)
             needsUpdate = False
             needsRdns = False
+            needsPrivateIp = False
 
             if not _is_same_value(source.get('group', None), configured.get('group', None)):
                 source['updated'] = datetime.now().isoformat()
@@ -70,7 +71,16 @@ class ActionModule(LinodeClientModule):
                         self.instance_set_ipv4_public_rdns(
                             source['id'], configured['ipv4_public_rdns'])
 
-            result = {'changed': needsUpdate or needsRdns, 'instance': source}
+            if 'ipv4_private_ip' in configured and configured['ipv4_private_ip']:
+                if self.instance_ipv4_private_ip(source['id']) is None:
+                    needsPrivateIp = True
+                    if not self._play_context.check_mode:
+                        self.instance_allocate_ipv4_private_ip(source['id'])
+
+            result = {
+                'changed': needsUpdate or needsRdns or needsPrivateIp,
+                'instance': source
+            }
 
         elif original_instance is not None and not is_present:
             if not self._play_context.check_mode:
@@ -108,6 +118,9 @@ def _configured_instance(task_args={}):
 
         if 'ipv4_public_rdns' in task_args:
             args['ipv4_public_rdns'] = task_args['ipv4_public_rdns']
+
+        if 'ipv4_private_ip' in task_args:
+            args['ipv4_private_ip'] = task_args['ipv4_private_ip']
 
         if 'group' in task_args:
             args['group'] = task_args['group']

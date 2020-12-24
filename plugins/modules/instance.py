@@ -63,6 +63,11 @@ options:
     type: str
     default: None
     required: false
+  ipv4_private_ip:
+    description: Allocate private IPv4 address.
+    type: bool
+    default: false
+    required: false
   root_pass:
     description: Root password to set at instance creation time.
     type: str
