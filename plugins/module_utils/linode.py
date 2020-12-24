@@ -91,7 +91,7 @@ class LinodeClientModule(ActionBase):
                 instance.ips.ipv4.public.rdns = args['ipv4_public_rdns']
 
             if 'ipv4_private_ip' in args:
-                self.instance_allocate_ipv4_private_ip(instance, public=False)
+                self.instance_allocate_ipv4_private_ip(instance)
 
         except Exception as e:
             self.raise_client_error(e)
