@@ -21,11 +21,19 @@
         ansible_linode_instance: "{{ result.instance }}"
         ansible_private_ipv4_address: "{{ result.instance.ipv4 | ansible.netcommon.ipaddr('private') | first | default(omit) }}"
 
+    - name: "wait for created instance"
+      local_action:
+        module: wait_for
+        host: "{{ ansible_host }}"
+        port: 22
+        timeout: 600
+      when: result.instance_created is defined and result.instance_created
+
 - name: "wait for instance"
   local_action:
     module: wait_for
     host: "{{ ansible_host }}"
-    port: 22
+    port: "{{ ansible_port }}"
     timeout: 600
   when: linode_wait_for_running | default(True)
 
@@ -35,9 +43,9 @@
     # TODO: when run on inventory in parallel file gets overwritten
     # TODO: loosing the some other hosts keys
     module: known_hosts
-    name: "{{ ansible_host }}"
+    name: "{% if ansible_port == 22 %}{{ ansible_host }}{% else %}[{{ ansible_host }}]:{{ ansible_port }}{% endif %}"
     # TODO: currently receiving only rsa key
-    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa {{ ansible_host }} 2>/dev/null') }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa -p {{ ansible_port }} {{ ansible_host }} 2>/dev/null') }}"
     # TODO: check for hashing, hash value is different for same host in multiple runs
     # TODO: causing written many times
     hash_host: false

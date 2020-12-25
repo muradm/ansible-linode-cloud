@@ -32,7 +32,11 @@ class ActionModule(LinodeClientModule):
             else:
                 created = _fake_instance(configured)
 
-            result = {'changed': True, 'instance': created['instance']}
+            result = {
+                'changed': True,
+                'instance': created['instance'],
+                'instance_created': True,
+            }
 
             if 'root_pass' in created:
                 result['root_pass'] = created['root_pass']
