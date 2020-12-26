@@ -20,29 +20,49 @@ description:
 options:
   state:
     description:
-      - C(present) to create new or manage existing linode volume
+      - C(detached) to create new or manage existing linode volume in detached state
+      - C(attached) to create new or manage existing linode volume in attached state
       - C(absent) to remote existing linode volume
-    choices: [ "present", "absent" ]
-    default: "present"
+    choices: [ "detached", "attached", "absent" ]
+    default: "detached"
     type: str
   label:
-    description: Linode volume label to create/update/remove.
+    description: 
+        A 1..32 characters Volume’s label, which is also used in the I(filesystem_path) of the resulting volume.
     type: str
     required: true
   region:
-    description: Linode region to create volume at.
+    description:
+        The Region to deploy this Volume in. This is only required if a I(instance) is not given and ignored
+        in this case.
     type: str
-    required: true
+    required: false
   size:
-    description: Size of linode volume to create.
+    description:
+        The initial size of this volume, in GB. Be aware that volumes may only be resized up after creation.
     type: int
-    required: true
+    required: false
+    default: 20
   tags:
     description: List of tags this linode instance should have.
     type: list
     default: []
     elements: str
     reqired: false
+  instance:
+    description:
+        Label of instance to attach this volume to. Otherwise volume will be unattached, and can be
+        attached to instance later on. Mandatory if I(state) is set to C(attached) otherwise ignored.
+    type: str
+    required: false
+  force:
+    description:
+        When state is C(absent) and volume attached, volume cannot be remove. If I(force) is C(True)
+        will automatically detach and then remove volume.
+    type: bool
+    required: false
+    default: false
+      
 requirements: [ "linode_api4" ]
 notes:
   - Options marked as required, are required at volume creation time.
@@ -54,16 +74,36 @@ author:
 '''
 
 EXAMPLES = r'''
-- name: create my linode volume
-  hosts: localhost
+- hosts: localhost
+  connection: local
   tasks:
-  - muradm.linode.volume:
-      label: 'my-volume-1'
-      region: 'eu-central'
-      size: 10
-      tags:
-      - 'linodes'
-      - 'db-servers'
+    - muradm.linode.volume:
+        label: my-unattached-volume-1
+        region: 'eu-central'
+        tags:
+        - 'linodes'
+        - 'db-servers'
+        size: 10
+
+
+- hosts: localhost
+  connection: local
+  tasks:
+    - muradm.linode.instance:
+        label: 'my-linode-1'
+        type: 'g6-standard-1'
+        image: 'linode/debian10'
+        region: 'eu-central'
+        tags:
+        - 'linodes'
+        - 'db-servers'
+
+    - muradm.linode.volume:
+        label: 'my-volume-1'
+        instance: 'my-linode-1'
+        state: 'attached'
+        size: 10
+
 
 - name: resize my volume and update tags
   hosts: localhost
@@ -77,12 +117,33 @@ EXAMPLES = r'''
       - 'db-servers'
       - 'monitoring'
 
-- name: remove my volume
-  hosts: localhost
+
+# attach existing volume to existing instance 
+- hosts: localhost
+  connection: local
   tasks:
-  - muradm.linode.volume:
-      label: 'my-volume-1'
-      state: 'absent'
+    - muradm.linode.volume:
+        label: my-unattached-volume-1
+        instance: 'my-linode-1'
+        state: 'attached'
+
+
+# detach arbitrary existing volume
+- hosts: localhost
+  connection: local
+  tasks:
+    - muradm.linode.volume:
+        label: my-volume-1
+        state: detached
+
+
+# remove arbitrary volume
+- hosts: localhost
+  connection: local
+  tasks:
+    - muradm.linode.volume:
+        label: my-volume-1
+        state: absent
 '''
 
 RETURN = r'''

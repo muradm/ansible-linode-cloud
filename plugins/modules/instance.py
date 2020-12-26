@@ -63,7 +63,7 @@ options:
     type: str
     default: None
     required: false
-  ipv4_private_ip:
+  private_ip:
     description: Allocate private IPv4 address.
     type: bool
     default: false

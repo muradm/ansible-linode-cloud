@@ -9,7 +9,7 @@
         tags: "{{ linode_tags | default(group_names) }}"
         authorized_keys: "{{ linode_authorized_keys | default([]) }}"
         ipv4_public_rdns: "{{ linode_ipv4_public_rdns | default(omit) }}"
-        ipv4_private_ip: "{{ linode_ipv4_private_ip | default(false) }}"
+        private_ip: "{{ linode_private_ip | default(false) }}"
         state: present
       register: result
 

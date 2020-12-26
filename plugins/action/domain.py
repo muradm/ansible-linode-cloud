@@ -8,7 +8,7 @@ __metaclass__ = type
 
 from ansible.plugins.action import ActionBase
 from ..module_utils.linode.__init__ import linode_client, linode_schema, linode_action_input_validated
-from ..module_utils.linode.__init__ import volume_find, volume_create, volume_update, volume_remove
+from ..module_utils.linode.__init__ import domain_find, domain_create, domain_update, domain_remove
 
 
 class ActionModule(ActionBase):
@@ -28,31 +28,29 @@ class ActionModule(ActionBase):
         schema = linode_schema()
 
         configured = linode_action_input_validated(
-            schema, 'volume_key', task_args)
-        volume = volume_find(client, configured['label'])
+            schema, 'domain_key', task_args)
+        domain = domain_find(client, configured['domain'])
 
         result = {'changed': False}
 
-        if volume is None and configured['state'] in ['attached', 'detached']:
+        if domain is None and configured['state'] == 'present':
             configured = linode_action_input_validated(
-                schema, 'volume_create', task_args)
+                schema, 'domain_create', task_args)
 
-            result['volume'] = volume_create(client, configured, check_mode)
+            result['domain'] = domain_create(client, configured, check_mode)
             result['changed'] = True
 
-        elif volume is not None and configured['state'] in ['attached', 'detached']:
+        elif domain is not None and configured['state'] == 'present':
             configured = linode_action_input_validated(
-                schema, 'volume_update', task_args)
+                schema, 'domain_update', task_args)
 
-            upd, res = volume_update(client, volume, configured, check_mode)
-            result['volume'] = res
+            upd, res = domain_update(client, domain, configured, check_mode)
+            result['domain'] = res
             result['changed'] = upd
 
-        elif volume is not None and configured['state'] == 'absent':
-            configured = linode_action_input_validated(
-                schema, 'volume_remove', task_args)
+        elif domain is not None and configured['state'] == 'absent':
 
-            result['volume'] = volume_remove(client, volume, check_mode)
+            result['domain'] = domain_remove(client, domain, check_mode)
             result['changed'] = True
 
         return result
