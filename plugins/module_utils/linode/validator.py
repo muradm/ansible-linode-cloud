@@ -198,6 +198,15 @@ def linode_schema():
         'return_unknown_records': {'type': 'boolean', 'required': False, 'default': False},
     })
 
+    schema.add('balancer_key', {
+        'label': {'type': 'string', 'required': True},
+        'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
+    })
+
+    schema.add('balancer_create', {
+        
+    })
+
     return schema
 
 

@@ -12,3 +12,4 @@ from .domain import domain_find, domain_create, domain_update, domain_remove
 from .domain import domain_record_find, domain_record_create, domain_record_update, domain_record_remove
 from .instance import instance_find, instance_create, instance_update, instance_remove
 from .volume import volume_find, volume_create, volume_update, volume_remove
+from .balancer import balancer_find, balancer_create, balancer_update, balancer_remove
