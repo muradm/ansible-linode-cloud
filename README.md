@@ -4,7 +4,8 @@ Currently provides the following actions:
 
 - `instance` - manages Linode instance
 - `volume` - manages Linode volume
-- `instance_volume` - attaches/detaches volume to/from instance
+- `domain` - manages Linode domains
+- `domain_record` - manages Linode domain records
 
 Currently provides the following roles:
 
