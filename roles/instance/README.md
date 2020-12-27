@@ -17,6 +17,7 @@ Requirements
 
 - `linode_api4`
 - `netaddr`
+- `cerberus`
 
 Role Variables
 --------------
