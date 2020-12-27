@@ -9,6 +9,7 @@ __metaclass__ = type
 from ansible.errors import AnsibleError
 from ansible.module_utils._text import to_native
 
+
 def linode_raise_client_error(e):
     from linode_api4 import ApiError, UnexpectedResponseError
 

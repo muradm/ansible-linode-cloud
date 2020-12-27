@@ -59,8 +59,6 @@ def instance_create(client, args, check_mode=False):
 
 
 def instance_update(client, instance, args, check_mode=False):
-    non_optional = ['region', 'type', 'image', 'label', 'authorized_keys']
-    remaining = _filter_dict_keys(args, non_optional)
     result = deepcopy(instance._raw_json)
     updated = False
 

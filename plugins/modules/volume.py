@@ -27,7 +27,7 @@ options:
     default: "detached"
     type: str
   label:
-    description: 
+    description:
         A 1..32 characters Volume’s label, which is also used in the I(filesystem_path) of the resulting volume.
     type: str
     required: true
@@ -62,8 +62,7 @@ options:
     type: bool
     required: false
     default: false
-      
-requirements: [ "linode_api4" ]
+requirements: [ "linode_api4", "cerberus" ]
 notes:
   - Options marked as required, are required at volume creation time.
   - For update and remove only I(label) is required.
@@ -118,7 +117,7 @@ EXAMPLES = r'''
       - 'monitoring'
 
 
-# attach existing volume to existing instance 
+# attach existing volume to existing instance
 - hosts: localhost
   connection: local
   tasks:

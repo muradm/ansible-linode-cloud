@@ -76,11 +76,9 @@ LINODE_TAGS_TYPE = {'type': 'list', 'schema': {
 
 def linode_schema():
     try:
-        from cerberus import Validator
+        from cerberus.schema import SchemaRegistry
     except ImportError:
         raise AnsibleError('could not import cerberus module')
-
-    from cerberus.schema import SchemaRegistry
 
     schema = SchemaRegistry()
 

@@ -73,7 +73,7 @@ options:
     type: str
     default: None
     required: false
-requirements: [ "linode_api4" ]
+requirements: [ "linode_api4", "cerberus" ]
 notes:
   - I(group) option is being deprecated by Linode.
   - Options marked as required, are required at instance creation time.

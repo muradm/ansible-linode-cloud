@@ -70,8 +70,6 @@ def volume_create(client, args, check_mode=False):
 
 
 def volume_update(client, volume, args, check_mode=False):
-    non_optional = ['region', 'size', 'label', 'instance']
-    remaining = _filter_dict_keys(args, non_optional)
     result = deepcopy(volume._raw_json)
     updated = False
 

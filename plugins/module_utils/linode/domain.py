@@ -13,8 +13,6 @@ from .util import _filter_dict_keys, _update_if_needed
 
 
 def domain_record_find(client, domain, rtype, name, target):
-    from linode_api4 import DomainRecord
-
     try:
         for drec in domain.records:
             if _domain_record_match_triplet({
@@ -51,8 +49,6 @@ def domain_record_create(client, domain, args, check_mode=False):
 
 
 def domain_record_update(client, record, args, check_mode=False):
-    non_optional = ['type']
-    remaining = _filter_dict_keys(args, non_optional)
     result = deepcopy(record._raw_json)
     updated = False
 
@@ -138,9 +134,6 @@ def domain_create(client, args, check_mode=False):
 
 
 def domain_update(client, domain, args, check_mode=False):
-    non_optional = ['domain', 'type', 'records',
-                    'keep_unknown_records', 'return_unknown_records']
-    remaining = _filter_dict_keys(args, non_optional)
     result = deepcopy(domain._raw_json)
     updated = False
 

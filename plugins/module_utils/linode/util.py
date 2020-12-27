@@ -11,6 +11,7 @@ __metaclass__ = type
 def _filter_dict_keys(d: dict, keys: list) -> dict:
     return {k: v for k, v in d.items() if not (k in keys) and v is not None}
 
+
 def _update_if_needed(target, updated, args, field, check_mode, to_be_sorted=False, to_be_lower=False):
     if field not in args:
         return False
