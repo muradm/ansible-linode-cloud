@@ -13,17 +13,11 @@ from ..module_utils.linode.__init__ import balancer_find, balancer_create, balan
 
 class ActionModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
-
-        if task_vars is None:
-            task_vars = {}
-
+        task_vars = {} if task_vars is None else task_vars
         result = super(ActionModule, self).run(tmp, task_vars)
         del tmp  # tmp no longer has any effect
-
         task_args = self._task.args
-
         check_mode = self._play_context.check_mode
-
         client = linode_client(task_args, task_vars)
         schema = linode_schema()
 

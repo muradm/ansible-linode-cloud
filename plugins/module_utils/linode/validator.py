@@ -43,7 +43,7 @@ DOMAIN_RECORD_SRV_PROTOCOLS_JOINED = ','.join(DOMAIN_RECORD_SRV_PROTOCOLS)
 
 def _check_domain_record_srv_protocol(f, v, error):
     if v is not None and isinstance(v, str):
-        if v.upper() not in DOMAIN_RECORD_SRV_PROTOCOLS:
+        if v.lower() not in DOMAIN_RECORD_SRV_PROTOCOLS:
             error(f, 'domain SRV record protocol should one of %s, but got %s' %
                   (DOMAIN_RECORD_SRV_PROTOCOLS_JOINED, v))
 
@@ -54,7 +54,7 @@ DOMAIN_RECORD_CAA_TAG_JOINED = ','.join(DOMAIN_RECORD_CAA_TAG)
 
 def _check_domain_record_caa_tag(f, v, error):
     if v is not None and isinstance(v, str):
-        if v.upper() not in DOMAIN_RECORD_CAA_TAG:
+        if v.lower() not in DOMAIN_RECORD_CAA_TAG:
             error(f, 'domain CAA record tag should one of %s, but got %s' %
                   (DOMAIN_RECORD_CAA_TAG_JOINED, v))
 
@@ -65,9 +65,87 @@ DOMAIN_TYPES_JOINED = ','.join(DOMAIN_TYPES)
 
 def _check_domain_type(f, v, error):
     if v is not None and isinstance(v, str):
-        if v.upper() not in DOMAIN_TYPES:
+        if v.lower() not in DOMAIN_TYPES:
             error(f, 'domain type should one of %s, but got %s' %
                   (DOMAIN_TYPES_JOINED, v))
+
+
+BALANCER_CONFIG_ALGORITHMS = ['roundrobin', 'leastconn', 'source']
+BALANCER_CONFIG_ALGORITHMS_JOINED = ','.join(BALANCER_CONFIG_ALGORITHMS)
+
+
+def _check_balancer_config_algorithm(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_CONFIG_ALGORITHMS:
+            error(f, 'balancer config algorithm should one of %s, but got %s' %
+                  (BALANCER_CONFIG_ALGORITHMS_JOINED, v))
+
+
+BALANCER_CONFIG_CHECKS = ['none', 'connection', 'http', 'http_body']
+BALANCER_CONFIG_CHECKS_JOINED = ','.join(BALANCER_CONFIG_CHECKS)
+
+
+def _check_balancer_config_check(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_CONFIG_CHECKS:
+            error(f, 'balancer config check should one of %s, but got %s' %
+                  (BALANCER_CONFIG_CHECKS_JOINED, v))
+
+
+BALANCER_CONFIG_CIPHER_SUITES = ['recommended', 'legacy']
+BALANCER_CONFIG_CIPHER_SUITES_JOINED = ','.join(BALANCER_CONFIG_CIPHER_SUITES)
+
+
+def _check_balancer_config_cipher_suite(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_CONFIG_CIPHER_SUITES:
+            error(f, 'balancer config cipher suite should one of %s, but got %s' %
+                  (BALANCER_CONFIG_CIPHER_SUITES_JOINED, v))
+
+
+BALANCER_CONFIG_PROTOCOLS = ['http', 'https', 'tcp']
+BALANCER_CONFIG_PROTOCOLS_JOINED = ','.join(BALANCER_CONFIG_PROTOCOLS)
+
+
+def _check_balancer_config_protocol(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_CONFIG_PROTOCOLS:
+            error(f, 'balancer config protocol should one of %s, but got %s' %
+                  (BALANCER_CONFIG_PROTOCOLS_JOINED, v))
+
+
+BALANCER_CONFIG_PROXY_PROTOCOLS = ['none', 'v1', 'v2']
+BALANCER_CONFIG_PROXY_PROTOCOLS_JOINED = ','.join(
+    BALANCER_CONFIG_PROXY_PROTOCOLS)
+
+
+def _check_balancer_config_proxy_protocol(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_CONFIG_PROXY_PROTOCOLS:
+            error(f, 'balancer config proxy protocol should one of %s, but got %s' %
+                  (BALANCER_CONFIG_PROXY_PROTOCOLS_JOINED, v))
+
+
+BALANCER_CONFIG_STICKINESSES = ['none', 'table', 'http_cookie']
+BALANCER_CONFIG_STICKINESSES_JOINED = ','.join(BALANCER_CONFIG_STICKINESSES)
+
+
+def _check_balancer_config_stickiness(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_CONFIG_STICKINESSES:
+            error(f, 'balancer config stickiness should one of %s, but got %s' %
+                  (BALANCER_CONFIG_STICKINESSES_JOINED, v))
+
+
+BALANCER_NODE_MODES = ['accept', 'reject', 'drain', 'backup']
+BALANCER_NODE_MODES_JOINED = ','.join(BALANCER_NODE_MODES)
+
+
+def _check_balancer_node_mode(f, v, error):
+    if v is not None and isinstance(v, str):
+        if v.lower() not in BALANCER_NODE_MODES:
+            error(f, 'balancer node mode should one of %s, but got %s' %
+                  (BALANCER_NODE_MODES_JOINED, v))
 
 
 LINODE_TAGS_TYPE = {'type': 'list', 'schema': {
@@ -198,13 +276,95 @@ def linode_schema():
         'return_unknown_records': {'type': 'boolean', 'required': False, 'default': False},
     })
 
+    schema.add('balancer_node_key', {
+        'balancer': {'type': 'string', 'required': True},
+        'port': {'type': 'integer', 'min': 1, 'max': 65535, 'required': True},
+        'address': {'type': 'string', 'required': True},
+        'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
+    })
+
+    schema.add('balancer_node_create', {
+        'address': {'type': 'string', 'required': True},
+        'label': {'type': 'string', 'required': True},
+        'mode': {'check_with': _check_balancer_node_mode, 'required': False, 'default': 'accept'},
+        'weight': {'type': 'integer', 'min': 1, 'max': 255, 'required': False, 'default': 1},
+    })
+
+    schema.add('balancer_node_update', {
+        'mode': {'check_with': _check_balancer_node_mode, 'required': False, 'default': 'accept'},
+        'weight': {'type': 'integer', 'min': 1, 'max': 255, 'required': False, 'default': 0},
+    })
+
+    schema.add('balancer_config_key', {
+        'balancer': {'type': 'string', 'required': True},
+        'port': {'type': 'integer', 'min': 1, 'max': 65535, 'required': True},
+        'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
+    })
+
+    schema.add('balancer_config_create', {
+        'port': {'type': 'integer', 'min': 1, 'max': 65535, 'required': True},
+        'protocol': {'check_with': _check_balancer_config_protocol, 'required': True},
+        'algorithm': {'check_with': _check_balancer_config_algorithm, 'required': True},
+        'stickiness': {'check_with': _check_balancer_config_stickiness, 'required': True},
+
+        # when protocol 'tcp'
+        'proxy_protocol': {'check_with': _check_balancer_config_proxy_protocol, 'required': False, 'default': 'none'},
+
+        # when protocol 'https'
+        'ssl_cert': {'type': 'string', 'required': False},
+        'ssl_key': {'type': 'string', 'required': False},
+        'cipher_suite': {'check_with': _check_balancer_config_cipher_suite, 'required': False, 'default': 'recommended'},
+
+        'check': {'check_with': _check_balancer_config_check, 'required': False, 'default': 'none'},
+
+        # common to all checks
+        'check_passive': {'type': 'boolean', 'required': False},
+        'check_interval': {'type': 'integer', 'required': False},
+        'check_timeout': {'type': 'integer', 'min': 1, 'max': 30, 'required': False},
+        'check_attempts': {'type': 'integer', 'min': 1, 'max': 30, 'required': False},
+
+        # when check 'http'
+        'check_path': {'type': 'string', 'required': False},
+        # when check 'http_body'
+        'check_body': {'type': 'string', 'required': False},
+
+        'nodes': {'type': 'list', 'schema': {'schema': schema.get('balancer_node_create')}, 'required': False, 'default': []},
+
+        'keep_unknown_nodes': {'type': 'boolean', 'required': False, 'default': True},
+        'return_unknown_nodes': {'type': 'boolean', 'required': False, 'default': False},
+    })
+
+    schema.add('balancer_config_update', schema.get('balancer_config_create'))
+
     schema.add('balancer_key', {
         'label': {'type': 'string', 'required': True},
         'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
     })
 
     schema.add('balancer_create', {
-        
+        'label': {'type': 'string', 'minlength': 3, 'maxlength': 32, 'required': True},
+        'region': {'type': 'string', 'required': True},
+        'client_conn_throttle': {'type': 'integer', 'min': 0, 'max': 20, 'required': False, 'default': 0},
+
+        # AttributeError: 'NodeBalancer' object has no attribute 'tags'
+        # 'tags': LINODE_TAGS_TYPE,
+
+        'configs': {'type': 'list', 'schema': {'schema': schema.get('balancer_config_create')}, 'required': False, 'default': []},
+
+        'keep_unknown_configs': {'type': 'boolean', 'required': False, 'default': True},
+        'return_unknown_configs': {'type': 'boolean', 'required': False, 'default': False},
+    })
+
+    schema.add('balancer_update', {
+        'client_conn_throttle': {'type': 'integer', 'min': 0, 'max': 20, 'required': False},
+
+        # AttributeError: 'NodeBalancer' object has no attribute 'tags'
+        # 'tags': LINODE_TAGS_TYPE,
+
+        'configs': {'type': 'list', 'schema': {'schema': schema.get('balancer_config_create')}, 'required': False, 'default': []},
+
+        'keep_unknown_configs': {'type': 'boolean', 'required': False, 'default': True},
+        'return_unknown_configs': {'type': 'boolean', 'required': False, 'default': False},
     })
 
     return schema
@@ -212,6 +372,8 @@ def linode_schema():
 
 def linode_action_input_validated(schema, definition, args):
     from cerberus import Validator
+    from pprint import pformat
+    from json import dumps
 
     log.vvvvv('linode_action_input_validated(%s): %s' %
               (definition, str(args)))
@@ -227,8 +389,9 @@ def linode_action_input_validated(schema, definition, args):
               (definition, str(normalized)))
 
     if not v.validate(normalized):
-        log.warning('while validating %s got errors: %s' %
-                    (definition, str(v.errors)))
+        for err in dumps(v.errors, indent=2).split("\n"):
+            log.warning('linode_action_input_validated(%s): %s' %
+                        (definition, err))
         raise AnsibleError('while validating %s got errors: %s' %
                            (definition, str(v.errors)))
 

@@ -7,6 +7,9 @@ Currently provides the following actions
 - `volume` - manages Linode volume
 - `domain` - manages Linode domains
 - `domain_record` - manages Linode domain records
+- `balancer` - manager Linode balancer
+- `balancer_config` - manages Linode balancer config
+- `balancer_node` - manages Linode balancer config node
 
 Currently provides the following roles:
 --------------
