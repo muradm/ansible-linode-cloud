@@ -63,6 +63,11 @@ options:
     type: bool
     required: false
     default: false
+  ipv4_public_rdns:
+    description: Reverse DNS address for public IPv4 address.
+    type: str
+    default: None
+    required: false
 requirements: [ "linode_api4", "cerberus" ]
 author:
 - muradm (@muradm)

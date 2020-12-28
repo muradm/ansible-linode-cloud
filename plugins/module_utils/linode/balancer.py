@@ -52,13 +52,18 @@ def balancer_create(client, args, check_mode=False):
 
                 result['configs'] = rconfigs
         else:
+            balancer = None
             result = _fake_balancer(args)
             result['configs'] = []
 
             if 'configs' in args:
                 for aconfig in args['configs']:
                     result['configs'].append(balancer_config_create(
-                        None, aconfig, check_mode))
+                        balancer, aconfig, check_mode))
+
+        if 'ipv4_public_rdns' in args and not check_mode:
+            balancer.ipv4.rdns = args['ipv4_public_rdns']
+            balancer.ipv4.save()
 
         return result
 
@@ -111,6 +116,12 @@ def balancer_update(client, balancer, args, check_mode=False):
                     updated = True
 
             result['configs'] = rconfigs
+
+        if 'ipv4_public_rdns' in args:
+            updated = True
+            if not check_mode:
+                balancer.ipv4.rdns = args['ipv4_public_rdns']
+                balancer.ipv4.save()
 
         return (updated, result)
     except Exception as e:
