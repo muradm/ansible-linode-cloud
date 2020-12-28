@@ -7,6 +7,11 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+from ansible.utils.display import Display
+
+
+log = Display()
+
 
 def _filter_dict_keys(d: dict, keys: list) -> dict:
     return {k: v for k, v in d.items() if not (k in keys) and v is not None}
@@ -26,6 +31,8 @@ def _update_if_needed(target, updated, args, field, check_mode, to_be_sorted=Fal
 
     if getattr(target, field) == args[field]:
         return False
+
+    log.vvv('_update_if_needed: %s: %s => %s' % (field, getattr(target, field), args[field]))
 
     if not check_mode:
         setattr(target, field, args[field])

@@ -47,7 +47,8 @@ def instance_create(client, args, check_mode=False):
                 result = deepcopy(instance._raw_json)
 
             if 'ipv4_public_rdns' in args:
-                instance.ips.ipv4.public.rdns = args['ipv4_public_rdns']
+                instance.ips.ipv4.public[0].rdns = '' if not args['ipv4_public_rdns'] else args['ipv4_public_rdns']
+                instance.ips.ipv4.public[0].rdns.save()
 
         else:
             result = _fake_instance(args)
@@ -82,8 +83,8 @@ def instance_update(client, instance, args, check_mode=False):
             if cur != args['ipv4_public_rdns']:
                 updated = True
                 if not check_mode:
-                    instance.ips.ipv4.public[0].rdns = args['ipv4_public_rdns']
-                    instance.ips.ipv4.public[0].save()
+                    instance.ips.ipv4.public[0].rdns = '' if not args['ipv4_public_rdns'] else args['ipv4_public_rdns']
+                    instance.ips.ipv4.public[0].rdns.save()
 
         return (updated, result)
 

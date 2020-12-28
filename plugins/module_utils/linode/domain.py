@@ -221,11 +221,17 @@ def domain_remove(client, domain, check_mode=False):
 
 
 def _domain_record_match_triplet(arec, brec):
-    if str(arec['target']).lower() == str(brec['target']).lower():
-        if str(arec['name']).lower() == str(brec['name']).lower():
-            if str(arec['type']).lower() == str(brec['type']).lower():
-                return True
-    return False
+    if str(arec['type']).lower() != str(brec['type']).lower():
+        return False
+
+    if str(arec['target']).lower() != str(brec['target']).lower():
+        return False
+
+    if str(arec['type']).lower() != 'srv':
+        if str(arec['name']).lower() != str(brec['name']).lower():
+            return False
+
+    return True
 
 
 def _domain_record_configured(drec, records):

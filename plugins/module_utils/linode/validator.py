@@ -353,6 +353,8 @@ def linode_schema():
 
         'keep_unknown_configs': {'type': 'boolean', 'required': False, 'default': True},
         'return_unknown_configs': {'type': 'boolean', 'required': False, 'default': False},
+
+        'ipv4_public_rdns': {'type': 'string', 'required': False},
     })
 
     schema.add('balancer_update', {
@@ -365,6 +367,8 @@ def linode_schema():
 
         'keep_unknown_configs': {'type': 'boolean', 'required': False, 'default': True},
         'return_unknown_configs': {'type': 'boolean', 'required': False, 'default': False},
+
+        'ipv4_public_rdns': {'type': 'string', 'required': False},
     })
 
     return schema
