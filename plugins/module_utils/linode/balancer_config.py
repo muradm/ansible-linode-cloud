@@ -97,6 +97,7 @@ def balancer_config_update(config, args, check_mode=False):
                 if not _is_node_configured(cnode, anodes):
                     if not keep_unknown_nodes:
                         balancer_node_remove(cnode, check_mode)
+                        updated = True
                     elif return_unknown_nodes:
                         cnode.address  # touch node address, so that linode_api4 loads it
                         rnodes.append(cnode._raw_json)

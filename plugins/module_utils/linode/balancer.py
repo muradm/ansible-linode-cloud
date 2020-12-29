@@ -71,7 +71,7 @@ def balancer_create(client, args, check_mode=False):
         linode_raise_client_error(e)
 
 
-def balancer_update(client, balancer, args, check_mode=False):
+def balancer_update(balancer, args, check_mode=False):
     result = deepcopy(balancer._raw_json)
     updated = False
 
@@ -97,6 +97,7 @@ def balancer_update(client, balancer, args, check_mode=False):
                 if not _is_config_configured(cconfig, aconfigs):
                     if not keep_unknown_configs:
                         balancer_config_remove(cconfig, check_mode)
+                        updated = True
                     elif return_unknown_configs:
                         rconfigs.append(cconfig._raw_json)
                 else:
@@ -128,7 +129,7 @@ def balancer_update(client, balancer, args, check_mode=False):
         linode_raise_client_error(e)
 
 
-def balancer_remove(client, balancer, check_mode=False):
+def balancer_remove(balancer, check_mode=False):
     try:
         if not check_mode:
             balancer.delete()

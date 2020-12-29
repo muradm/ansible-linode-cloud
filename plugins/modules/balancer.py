@@ -27,7 +27,7 @@ options:
     type: str
   label:
     description:
-        A 3..32 characters long existing balancer label. 
+        A 3..32 characters long existing balancer label.
     type: str
     required: true
   region:

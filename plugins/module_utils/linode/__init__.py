@@ -9,7 +9,7 @@ __metaclass__ = type
 from .client import linode_client
 from .validator import linode_schema, linode_action_input_validated
 from .domain import domain_find, domain_create, domain_update, domain_remove
-from .domain import domain_record_find, domain_record_create, domain_record_update, domain_record_remove
+from .domain_record import domain_record_find, domain_record_create, domain_record_update, domain_record_remove, domain_record_match
 from .instance import instance_find, instance_create, instance_update, instance_remove
 from .volume import volume_find, volume_create, volume_update, volume_remove
 from .balancer import balancer_find, balancer_create, balancer_update, balancer_remove

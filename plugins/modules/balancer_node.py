@@ -13,7 +13,7 @@ short_description: Create/update/remove a linode balancer node
 description:
     - Action will query by I(balancer) and I(port) existing cloud state, then by I(address)
       will manage balancer node only.
-    - Fails with AnsibleError if specified I(balancer) or its I(port) configuration does exist 
+    - Fails with AnsibleError if specified I(balancer) or its I(port) configuration does exist
     - Linode internal IDs are not used to perform operations, thus updating I(balancer), I(port)
       and I(address) here impossible. Other fields I(label), I(mode) and I(weight) updatable here.
 options:
@@ -26,7 +26,7 @@ options:
     type: str
   balancer:
     description:
-        A 3..32 characters long existing balancer label. 
+        A 3..32 characters long existing balancer label.
     type: str
     required: true
   port:

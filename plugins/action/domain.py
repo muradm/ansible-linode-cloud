@@ -13,44 +13,38 @@ from ..module_utils.linode.__init__ import domain_find, domain_create, domain_up
 
 class ActionModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
-
-        if task_vars is None:
-            task_vars = {}
-
+        task_vars = {} if task_vars is None else task_vars
         result = super(ActionModule, self).run(tmp, task_vars)
         del tmp  # tmp no longer has any effect
-
         task_args = self._task.args
-
         check_mode = self._play_context.check_mode
-
         client = linode_client(task_args, task_vars)
         schema = linode_schema()
 
-        configured = linode_action_input_validated(
+        args = linode_action_input_validated(
             schema, 'domain_key', task_args)
-        domain = domain_find(client, configured['domain'])
+        domain = domain_find(client, args['domain'])
 
         result = {'changed': False}
 
-        if domain is None and configured['state'] == 'present':
-            configured = linode_action_input_validated(
+        if domain is None and args['state'] == 'present':
+            args = linode_action_input_validated(
                 schema, 'domain_create', task_args)
 
-            result['domain'] = domain_create(client, configured, check_mode)
+            result['domain'] = domain_create(client, args, check_mode)
             result['changed'] = True
 
-        elif domain is not None and configured['state'] == 'present':
-            configured = linode_action_input_validated(
+        elif domain is not None and args['state'] == 'present':
+            args = linode_action_input_validated(
                 schema, 'domain_update', task_args)
 
-            upd, res = domain_update(client, domain, configured, check_mode)
+            upd, res = domain_update(domain, args, check_mode)
             result['domain'] = res
             result['changed'] = upd
 
-        elif domain is not None and configured['state'] == 'absent':
+        elif domain is not None and args['state'] == 'absent':
 
-            result['domain'] = domain_remove(client, domain, check_mode)
+            result['domain'] = domain_remove(domain, check_mode)
             result['changed'] = True
 
         return result

@@ -215,15 +215,7 @@ def linode_schema():
         'force': {'type': 'boolean', 'required': False, 'default': False},
     })
 
-    schema.add('domain_record_key', {
-        'domain': {'type': 'string', 'required': True},
-        'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
-        'type': {'check_with': _check_domain_record_type, 'required': True},
-        'name': {'type': 'string', 'required': True},
-        'target': {'type': 'string', 'required': True},
-    })
-
-    schema.add('domain_record_create', {
+    schema.add('domain_record', {
         'type': {'check_with': _check_domain_record_type, 'required': True},
         'name': {'type': 'string', 'required': True},
         'target': {'type': 'string', 'required': True},
@@ -235,8 +227,6 @@ def linode_schema():
         'service': {'type': 'string', 'required': False},
         'tag': {'check_with': _check_domain_record_caa_tag},
     })
-
-    schema.add('domain_record_update', schema.get('domain_record_create'))
 
     schema.add('domain_key', {
         'domain': {'type': 'string', 'required': True},
@@ -256,7 +246,7 @@ def linode_schema():
         'master_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'axfr_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'tags': LINODE_TAGS_TYPE,
-        'records': {'type': 'list', 'schema': {'schema': schema.get('domain_record_update')}},
+        'records': {'type': 'list', 'schema': {'schema': schema.get('domain_record')}},
     })
 
     schema.add('domain_update', {
@@ -271,7 +261,7 @@ def linode_schema():
         'master_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'axfr_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'tags': LINODE_TAGS_TYPE,
-        'records': {'type': 'list', 'schema': {'schema': schema.get('domain_record_update')}},
+        'records': {'type': 'list', 'schema': {'schema': schema.get('domain_record')}},
         'keep_unknown_records': {'type': 'boolean', 'required': False, 'default': True},
         'return_unknown_records': {'type': 'boolean', 'required': False, 'default': False},
     })

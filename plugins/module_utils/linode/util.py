@@ -39,3 +39,7 @@ def _update_if_needed(target, updated, args, field, check_mode, to_be_sorted=Fal
     updated[field] = args[field]
 
     return True
+
+class objview(object):
+    def __init__(self, d):
+        self.__dict__ = d

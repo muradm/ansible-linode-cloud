@@ -92,7 +92,7 @@ def instance_update(client, instance, args, check_mode=False):
         linode_raise_client_error(e)
 
 
-def instance_remove(client, instance, check_mode=False):
+def instance_remove(instance, check_mode=False):
     try:
         if not check_mode:
             instance.delete()

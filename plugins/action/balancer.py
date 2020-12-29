@@ -21,30 +21,30 @@ class ActionModule(ActionBase):
         client = linode_client(task_args, task_vars)
         schema = linode_schema()
 
-        configured = linode_action_input_validated(
+        args = linode_action_input_validated(
             schema, 'balancer_key', task_args)
-        balancer = balancer_find(client, configured['label'])
+        balancer = balancer_find(client, args['label'])
 
         result = {'changed': False}
 
-        if balancer is None and configured['state'] == 'present':
-            configured = linode_action_input_validated(
+        if balancer is None and args['state'] == 'present':
+            args = linode_action_input_validated(
                 schema, 'balancer_create', task_args)
 
-            result['balancer'] = balancer_create(client, configured, check_mode)
+            result['balancer'] = balancer_create(client, args, check_mode)
             result['changed'] = True
 
-        elif balancer is not None and configured['state'] == 'present':
-            configured = linode_action_input_validated(
+        elif balancer is not None and args['state'] == 'present':
+            args = linode_action_input_validated(
                 schema, 'balancer_update', task_args)
 
-            upd, res = balancer_update(client, balancer, configured, check_mode)
+            upd, res = balancer_update(balancer, args, check_mode)
             result['balancer'] = res
             result['changed'] = upd
 
-        elif balancer is not None and configured['state'] == 'absent':
+        elif balancer is not None and args['state'] == 'absent':
 
-            result['balancer'] = balancer_remove(client, balancer, check_mode)
+            result['balancer'] = balancer_remove(balancer, check_mode)
             result['changed'] = True
 
         return result
