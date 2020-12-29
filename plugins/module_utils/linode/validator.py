@@ -215,6 +215,13 @@ def linode_schema():
         'force': {'type': 'boolean', 'required': False, 'default': False},
     })
 
+    schema.add('domain_record_key', {
+        'domain': {'type': 'string', 'required': True},
+        'type': {'check_with': _check_domain_record_type, 'required': True},
+        'name': {'type': 'string', 'required': True},
+        'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
+    })
+
     schema.add('domain_record', {
         'type': {'check_with': _check_domain_record_type, 'required': True},
         'name': {'type': 'string', 'required': True},

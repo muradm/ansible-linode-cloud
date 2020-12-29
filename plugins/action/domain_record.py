@@ -23,29 +23,32 @@ class ActionModule(ActionBase):
         client = linode_client(task_args, task_vars)
         schema = linode_schema()
 
-        args = linode_action_input_validated(
-            schema, 'domain_record', task_args)
+        key_args = linode_action_input_validated(
+            schema, 'domain_record_key', task_args)
 
-        domain = domain_find(client, args['domain'])
+        domain = domain_find(client, key_args['domain'])
         if domain is None:
             raise AnsibleError(u'%s domain not found for record %s:%s' % (
-                args['domain'], args['type'], args['name']))
+                key_args['domain'], key_args['type'], key_args['name']))
+
+        args = linode_action_input_validated(
+            schema, 'domain_record', task_args)
 
         record = domain_record_find(domain, args)
 
         result = {'changed': False}
 
-        if record is None and args['state'] == 'present':
+        if record is None and key_args['state'] == 'present':
             result['domain_record'] = domain_record_create(
                 domain, args, check_mode)
             result['changed'] = True
 
-        elif record is not None and args['state'] == 'present':
+        elif record is not None and key_args['state'] == 'present':
             upd, res = domain_record_update(record, args, check_mode)
             result['domain_record'] = res
             result['changed'] = upd
 
-        elif record is not None and args['state'] == 'absent':
+        elif record is not None and key_args['state'] == 'absent':
             result['domain_record'] = domain_record_remove(record, check_mode)
             result['changed'] = True
 
