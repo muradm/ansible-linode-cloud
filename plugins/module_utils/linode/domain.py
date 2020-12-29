@@ -8,7 +8,7 @@ __metaclass__ = type
 
 from copy import deepcopy
 from datetime import datetime
-from .domain_record import domain_record_find, domain_record_create, domain_record_update, domain_record_remove, domain_record_match
+from .domain_record import domain_record_create, domain_record_update, domain_record_remove, domain_record_match
 from .error import linode_raise_client_error
 from .util import _filter_dict_keys, _update_if_needed
 

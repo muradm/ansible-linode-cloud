@@ -8,7 +8,7 @@ __metaclass__ = type
 
 from copy import deepcopy
 from datetime import datetime
-from .balancer_config import balancer_config_find, balancer_config_create, balancer_config_update, balancer_config_remove
+from .balancer_config import balancer_config_create, balancer_config_update, balancer_config_remove
 from .error import linode_raise_client_error
 from .util import _filter_dict_keys, _update_if_needed
 

@@ -32,13 +32,15 @@ def _update_if_needed(target, updated, args, field, check_mode, to_be_sorted=Fal
     if getattr(target, field) == args[field]:
         return False
 
-    log.vvv('_update_if_needed: %s: %s => %s' % (field, getattr(target, field), args[field]))
+    log.vvv('_update_if_needed: %s: %s => %s' %
+            (field, getattr(target, field), args[field]))
 
     if not check_mode:
         setattr(target, field, args[field])
     updated[field] = args[field]
 
     return True
+
 
 class objview(object):
     def __init__(self, d):

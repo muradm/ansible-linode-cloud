@@ -7,8 +7,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from copy import deepcopy
-from datetime import datetime
-from .balancer_node import balancer_node_find, balancer_node_create, balancer_node_update, balancer_node_remove
+from .balancer_node import balancer_node_create, balancer_node_update, balancer_node_remove
 from .error import linode_raise_client_error
 from .util import _filter_dict_keys, _update_if_needed
 

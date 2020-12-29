@@ -366,7 +366,6 @@ def linode_schema():
 
 def linode_action_input_validated(schema, definition, args):
     from cerberus import Validator
-    from pprint import pformat
     from json import dumps
 
     log.vvvvv('linode_action_input_validated(%s): %s' %

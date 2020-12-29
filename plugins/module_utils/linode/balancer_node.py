@@ -7,7 +7,6 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from copy import deepcopy
-from datetime import datetime
 from .error import linode_raise_client_error
 from .util import _filter_dict_keys, _update_if_needed
 
