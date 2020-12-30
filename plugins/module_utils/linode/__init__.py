@@ -6,7 +6,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from .client import linode_client
+from .client import linode_client, linode_wait_for_status, linode_wait_for_status_changed
 from .validator import linode_schema, linode_action_input_validated
 from .domain import domain_find, domain_create, domain_update, domain_remove
 from .domain_record import domain_record_find, domain_record_create, domain_record_update, domain_record_remove, domain_record_match

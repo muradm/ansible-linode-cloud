@@ -9,7 +9,7 @@ __metaclass__ = type
 from ansible.errors import AnsibleError
 from ansible.module_utils.ansible_release import __version__ as ansible_version
 from os import environ
-
+from time import sleep
 
 def linode_client(args, vars, env=environ):
     try:
@@ -31,3 +31,27 @@ def linode_client(args, vars, env=environ):
     user_agent = 'Ansible-linode_api4/%s' % ansible_version
 
     return LinodeClient(at, user_agent=user_agent)
+
+def linode_wait_for_status(obj, status, timeout=600):
+    if not hasattr(obj, 'status'):
+        raise AnsibleError(u'cannot wait for object without status: %s' % str(obj))
+
+    waited = 0
+    wait_by = 10
+    while obj.status != status:
+        sleep(wait_by)
+        waited = waited + wait_by
+        if waited > timeout and obj.status != status:
+            raise AnsibleError(u'%s status wait timeout for: %s' % (status, str(obj)))
+
+def linode_wait_for_status_changed(obj, current_status, timeout=600):
+    if not hasattr(obj, 'status'):
+        raise AnsibleError(u'cannot wait for object without status: %s' % str(obj))
+
+    waited = 0
+    wait_by = 10
+    while obj.status == current_status:
+        sleep(wait_by)
+        waited = waited + wait_by
+        if waited > timeout and obj.status == current_status:
+            raise AnsibleError(u'%s current status change wait timeout for: %s' % (current_status, str(obj)))

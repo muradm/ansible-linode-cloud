@@ -9,6 +9,7 @@ __metaclass__ = type
 from ansible.errors import AnsibleError
 from copy import deepcopy
 from datetime import datetime
+from .client import linode_wait_for_status
 from .error import linode_raise_client_error
 from .util import _filter_dict_keys, _update_if_needed
 from .instance import instance_find
@@ -55,6 +56,8 @@ def volume_create(client, args, check_mode=False):
                 size=args['size'],
                 **remaining
             )
+
+            linode_wait_for_status(instance, "active")
 
             if instance is not None:
                 volume.attach(instance)

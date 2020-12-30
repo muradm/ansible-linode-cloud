@@ -8,6 +8,7 @@ __metaclass__ = type
 
 from copy import deepcopy
 from datetime import datetime
+from .client import linode_wait_for_status
 from .error import linode_raise_client_error
 from .util import _filter_dict_keys, _update_if_needed
 
@@ -49,6 +50,8 @@ def instance_create(client, args, check_mode=False):
             if 'ipv4_public_rdns' in args:
                 instance.ips.ipv4.public[0].rdns = '' if not args['ipv4_public_rdns'] else args['ipv4_public_rdns']
                 instance.ips.ipv4.public[0].rdns.save()
+
+            linode_wait_for_status(instance, "running")
 
         else:
             result = _fake_instance(args)
