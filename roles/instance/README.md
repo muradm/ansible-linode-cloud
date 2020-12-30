@@ -24,10 +24,7 @@ Role Variables
 
 Role will expect same variables as for `muradm.linode.instance` action, but prefixed with 'linode_' in
 order to avoid naming conflicts. For the list of variables refer to `muradm.linode.instance`
-documentation and check example below. Role specific variables are:
-
-- `linode_wait_for_running` - will wait for new linode instance to become booted (default `True`)
-- `linode_ssh_keyscan` - will use `ssh-keyscan` and `known_hosts` task to update known hosts (default `False`)
+documentation.
 
 Use Cases
 ----------------
@@ -101,12 +98,11 @@ Once inventory is ready, in your playbooks, somewhere at early stages:
     - hosts: linodes
       gather_facts: no
       roles:
-         - { role: muradm.linode.instance, vars: { wait_for_running: True, ssh_keyscan: True } }
+         - role: muradm.linode.instance
 
 
 Gathering facts will be off for this task, since IP addresses and other information is
-simply not available yet. In addition, `ssh_keyscan` will attempt to add discovered hosts
-to your `~/.ssh/known_hosts` using `ssh-keyscan`.
+simply not available yet.
 
 This role will connect to Linode Cloud, lookup every host by label. If such linode instance
 exists, will collect information and fill `ansible_host`, `ansible_user`, so that
@@ -139,7 +135,7 @@ Playbook:
     - hosts: linode_servers
       gather_facts: no
       roles:
-         - { role: muradm.linode.instance, vars: { wait_for_running: True, ssh_keyscan: True } }
+         - role: muradm.linode.instance
 
 License
 -------
