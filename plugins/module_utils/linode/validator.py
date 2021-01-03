@@ -196,7 +196,7 @@ def linode_schema():
     schema.add('volume_create', {
         'label': {'type': 'string', 'required': True},
         'region': {'type': 'string', 'required': False},
-        'size': {'type': 'integer', 'required': False, 'default': 20},
+        'size': {'type': 'integer', 'coerce': int, 'required': False, 'default': 20},
         'tags': LINODE_TAGS_TYPE,
         'instance': {'type': 'string', 'required': False},
         'state': {'check_with': _check_volume_state, 'required': False, 'default': 'detached'},
@@ -204,7 +204,7 @@ def linode_schema():
 
     schema.add('volume_update', {
         'label': {'type': 'string', 'required': True},
-        'size': {'type': 'integer', 'required': False},
+        'size': {'type': 'integer', 'coerce': int, 'required': False},
         'tags': LINODE_TAGS_TYPE,
         'instance': {'type': 'string', 'required': False},
         'state': {'check_with': _check_volume_state, 'required': False, 'default': 'detached'},
@@ -226,11 +226,11 @@ def linode_schema():
         'type': {'check_with': _check_domain_record_type, 'required': True},
         'name': {'type': 'string', 'required': True},
         'target': {'type': 'string', 'required': True},
-        'ttl_sec': {'type': 'integer', 'required': False},
+        'ttl_sec': {'type': 'integer', 'coerce': int, 'required': False},
         'protocol': {'check_with': _check_domain_record_srv_protocol},
-        'priority': {'type': 'integer', 'required': False},
-        'weight': {'type': 'integer', 'required': False},
-        'port': {'type': 'integer', 'required': False},
+        'priority': {'type': 'integer', 'coerce': int, 'required': False},
+        'weight': {'type': 'integer', 'coerce': int, 'required': False},
+        'port': {'type': 'integer', 'coerce': int, 'required': False},
         'service': {'type': 'string', 'required': False},
         'tag': {'check_with': _check_domain_record_caa_tag},
     })
@@ -246,10 +246,10 @@ def linode_schema():
         'type': {'check_with': _check_domain_type, 'required': True},
         'group': {'type': 'string', 'required': False},
         'description': {'type': 'string', 'required': False},
-        'retry_sec': {'type': 'integer', 'required': False},
-        'expire_sec': {'type': 'integer', 'required': False},
-        'refresh_sec': {'type': 'integer', 'required': False},
-        'ttl_sec': {'type': 'integer', 'required': False},
+        'retry_sec': {'type': 'integer', 'coerce': int, 'required': False},
+        'expire_sec': {'type': 'integer', 'coerce': int, 'required': False},
+        'refresh_sec': {'type': 'integer', 'coerce': int, 'required': False},
+        'ttl_sec': {'type': 'integer', 'coerce': int, 'required': False},
         'master_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'axfr_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'tags': LINODE_TAGS_TYPE,
@@ -261,10 +261,10 @@ def linode_schema():
         'soa_email': {'type': 'string', 'required': False},
         'group': {'type': 'string', 'required': False},
         'description': {'type': 'string', 'required': False},
-        'retry_sec': {'type': 'integer', 'required': False},
-        'expire_sec': {'type': 'integer', 'required': False},
-        'refresh_sec': {'type': 'integer', 'required': False},
-        'ttl_sec': {'type': 'integer', 'required': False},
+        'retry_sec': {'type': 'integer', 'coerce': int, 'required': False},
+        'expire_sec': {'type': 'integer', 'coerce': int, 'required': False},
+        'refresh_sec': {'type': 'integer', 'coerce': int, 'required': False},
+        'ttl_sec': {'type': 'integer', 'coerce': int, 'required': False},
         'master_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'axfr_ips': {'type': 'list', 'schema': {'type': 'string'}, 'required': False, 'default': []},
         'tags': LINODE_TAGS_TYPE,
@@ -275,7 +275,7 @@ def linode_schema():
 
     schema.add('balancer_node_key', {
         'balancer': {'type': 'string', 'required': True},
-        'port': {'type': 'integer', 'min': 1, 'max': 65535, 'required': True},
+        'port': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 65535, 'required': True},
         'address': {'type': 'string', 'required': True},
         'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
     })
@@ -284,22 +284,22 @@ def linode_schema():
         'address': {'type': 'string', 'required': True},
         'label': {'type': 'string', 'required': True},
         'mode': {'check_with': _check_balancer_node_mode, 'required': False, 'default': 'accept'},
-        'weight': {'type': 'integer', 'min': 1, 'max': 255, 'required': False, 'default': 1},
+        'weight': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 255, 'required': False, 'default': 1},
     })
 
     schema.add('balancer_node_update', {
         'mode': {'check_with': _check_balancer_node_mode, 'required': False, 'default': 'accept'},
-        'weight': {'type': 'integer', 'min': 1, 'max': 255, 'required': False, 'default': 0},
+        'weight': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 255, 'required': False, 'default': 0},
     })
 
     schema.add('balancer_config_key', {
         'balancer': {'type': 'string', 'required': True},
-        'port': {'type': 'integer', 'min': 1, 'max': 65535, 'required': True},
+        'port': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 65535, 'required': True},
         'state': {'check_with': _check_state, 'required': False, 'default': 'present'},
     })
 
     schema.add('balancer_config_create', {
-        'port': {'type': 'integer', 'min': 1, 'max': 65535, 'required': True},
+        'port': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 65535, 'required': True},
         'protocol': {'check_with': _check_balancer_config_protocol, 'required': True},
         'algorithm': {'check_with': _check_balancer_config_algorithm, 'required': True},
         'stickiness': {'check_with': _check_balancer_config_stickiness, 'required': True},
@@ -316,9 +316,9 @@ def linode_schema():
 
         # common to all checks
         'check_passive': {'type': 'boolean', 'required': False},
-        'check_interval': {'type': 'integer', 'required': False},
-        'check_timeout': {'type': 'integer', 'min': 1, 'max': 30, 'required': False},
-        'check_attempts': {'type': 'integer', 'min': 1, 'max': 30, 'required': False},
+        'check_interval': {'type': 'integer', 'coerce': int, 'required': False},
+        'check_timeout': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 30, 'required': False},
+        'check_attempts': {'type': 'integer', 'coerce': int, 'min': 1, 'max': 30, 'required': False},
 
         # when check 'http'
         'check_path': {'type': 'string', 'required': False},
@@ -341,7 +341,7 @@ def linode_schema():
     schema.add('balancer_create', {
         'label': {'type': 'string', 'minlength': 3, 'maxlength': 32, 'required': True},
         'region': {'type': 'string', 'required': True},
-        'client_conn_throttle': {'type': 'integer', 'min': 0, 'max': 20, 'required': False, 'default': 0},
+        'client_conn_throttle': {'type': 'integer', 'coerce': int, 'min': 0, 'max': 20, 'required': False, 'default': 0},
 
         # AttributeError: 'NodeBalancer' object has no attribute 'tags'
         # 'tags': LINODE_TAGS_TYPE,
@@ -355,7 +355,7 @@ def linode_schema():
     })
 
     schema.add('balancer_update', {
-        'client_conn_throttle': {'type': 'integer', 'min': 0, 'max': 20, 'required': False},
+        'client_conn_throttle': {'type': 'integer', 'coerce': int, 'min': 0, 'max': 20, 'required': False},
 
         # AttributeError: 'NodeBalancer' object has no attribute 'tags'
         # 'tags': LINODE_TAGS_TYPE,
