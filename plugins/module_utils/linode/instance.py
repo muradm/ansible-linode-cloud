@@ -49,7 +49,7 @@ def instance_create(client, args, check_mode=False):
 
             if 'ipv4_public_rdns' in args:
                 instance.ips.ipv4.public[0].rdns = '' if not args['ipv4_public_rdns'] else args['ipv4_public_rdns']
-                instance.ips.ipv4.public[0].rdns.save()
+                instance.ips.ipv4.public[0].save()
 
             linode_wait_for_status(instance, "running")
 
