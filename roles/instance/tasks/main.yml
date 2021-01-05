@@ -10,12 +10,45 @@
     ipv4_public_rdns: "{{ linode_ipv4_public_rdns | default(omit) }}"
     private_ip: "{{ linode_private_ip | default(false) }}"
     state: present
-  register: result
+  register: instance_result
+
+- block:
+    - name: registering for rdns
+      domain_record:
+        domain: "{{ linode_domain | mandatory }}"
+        ttl_sec: 300
+        type: A
+        name: "{{ inventory_hostname }}"
+        target: "{{ instance_result.instance.ipv4 | ansible.netcommon.ipaddr('public') | first }}"
+      register: domain_record_result
+
+    - shell: 'dig {{ inventory_hostname }}.{{ linode_domain }} A +noall +short'
+      changed_when: false
+      delegate_to: localhost
+      connection: local
+      register: dig_result
+      retries: 3
+      delay: 60
+      until: dig_result.stdout == domain_record_result.domain_record.target
+
+    - name: updating rdns
+      instance:
+        label: "{{ linode_label | default(inventory_hostname) | mandatory }}"
+        region: "{{ linode_region | mandatory }}"
+        type: "{{ linode_type | mandatory }}"
+        image: "{{ linode_image | mandatory }}"
+        tags: "{{ linode_tags | default(group_names) }}"
+        authorized_keys: "{{ linode_authorized_keys | default([]) }}"
+        ipv4_public_rdns: "{{ inventory_hostname }}.{{ linode_domain }}"
+        private_ip: "{{ linode_private_ip | default(false) }}"
+        state: present
+
+  when: linode_register_rdns is defined and linode_register_rdns
 
 - name: record
   set_fact:
     cacheable: yes
-    ansible_host: "{{ result.instance.ipv4 | ansible.netcommon.ipaddr('public') | first }}"
+    ansible_host: "{{ instance_result.instance.ipv4 | ansible.netcommon.ipaddr('public') | first }}"
     ansible_user: root
-    ansible_linode_instance: "{{ result.instance }}"
-    ansible_private_ipv4_address: "{{ result.instance.ipv4 | ansible.netcommon.ipaddr('private') | first | default(omit) }}"
+    ansible_linode_instance: "{{ instance_result.instance }}"
+    ansible_private_ipv4_address: "{{ instance_result.instance.ipv4 | ansible.netcommon.ipaddr('private') | first | default(omit) }}"

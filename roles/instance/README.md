@@ -109,6 +109,13 @@ exists, will collect information and fill `ansible_host`, `ansible_user`, so tha
 subsequent tasks, can do normal job. If such linode instances do not exists, it will
 automatically create them as per inventory configuration.
 
+There is a `linode_register_rdns` boolean input variable for this role. If one has also,
+a domain managed by Linode Cloud, this role may attempt to update the domain A record
+and register rDNS record. When set to `True`, role will use domain specified by `linode_domain`
+variable to create an A record for current instance. Once A record is created, it will
+wait on localhost using `dig` command for record to become propagated and resolvable. Then
+it will update current instance's public IP rDNS. In short:
+
 
 Example Playbook
 ----------------
