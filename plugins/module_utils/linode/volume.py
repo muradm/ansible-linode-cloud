@@ -63,6 +63,9 @@ def volume_create(client, args, check_mode=False):
 
             if instance is not None:
                 volume.attach(instance)
+                while volume.status != 'active':
+                    sleep(1)
+                    volume = volume_find(client, volume.label)
 
             result = deepcopy(volume._raw_json)
         else:
